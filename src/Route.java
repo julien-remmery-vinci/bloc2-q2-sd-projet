@@ -1,18 +1,24 @@
 public class Route {
-  private int villeDepart;
-  private int villeArrivee;
+  private Ville villeDepart;
+  private Ville villeArrivee;
+  private double distance;
 
-  public Route(int villeDepart, int villeArrivee) {
+  public Route(Ville villeDepart, Ville villeArrivee) {
     this.villeDepart = villeDepart;
     this.villeArrivee = villeArrivee;
+    this.distance = Util.distance(villeDepart.getLat(), villeDepart.getLng(), villeArrivee.getLat(), villeArrivee.getLng());
   }
 
-  public int getVilleDepart() {
+  public Ville getVilleDepart() {
     return villeDepart;
   }
 
-  public int getVilleArrivee() {
+  public Ville getVilleArrivee() {
     return villeArrivee;
+  }
+
+  public double getDistance() {
+    return distance;
   }
 
   @Override

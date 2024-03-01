@@ -27,6 +27,22 @@ public class Ville {
         '}';
   }
 
+  public int getId() {
+    return id;
+  }
+
+  public String getNom() {
+    return nom;
+  }
+
+  public double getLng() {
+    return lng;
+  }
+
+  public double getLat() {
+    return lat;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
