@@ -42,21 +42,4 @@ public class Ville {
   public double getLat() {
     return lat;
   }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Ville ville = (Ville) o;
-    return id == ville.id;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id);
-  }
 }
