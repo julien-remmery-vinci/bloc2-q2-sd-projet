@@ -30,23 +30,31 @@ public class Graph {
         String[] road = roadsScanner.nextLine().split(",");
         int idVilleDepart = Integer.parseInt(road[0]);
         int idVilleArrivee = Integer.parseInt(road[1]);
+
         Route r = new Route(idVilleDepart, idVilleArrivee);
         Ville cmpVilleDepart = new Ville(idVilleDepart);
         Set<Route> s = routes.get(cmpVilleDepart);
         s.add(r);
         routes.put(cmpVilleDepart, s);
 
+        Route r2 = new Route(idVilleArrivee, idVilleDepart);
         Ville cmpVilleArrivee = new Ville(idVilleArrivee);
-        Set<Route> s1 = routes.get(cmpVilleArrivee);
-        s1.add(r);
-        routes.put(cmpVilleArrivee, s1);
+        Set<Route> s2 = routes.get(cmpVilleArrivee);
+        s2.add(r2);
+        routes.put(cmpVilleArrivee, s2);
       }
-      System.out.println(routes);
+      for (Set<Route> value : routes.values()) {
+        for (Route route : value) {
+          System.out.println(route.getVilleDepart()+","+route.getVilleArrivee());
+        };
+      }
     }
 
     public void calculerItineraireMinimisantNombreRoutes(String villeDepart, String villeArrivee){
+
     }
 
     public void calculerItineraireMinimisantKm(String villeDepart, String villeArrivee){
+
     }
 }

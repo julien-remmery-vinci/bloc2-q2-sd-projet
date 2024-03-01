@@ -7,6 +7,14 @@ public class Route {
     this.villeArrivee = villeArrivee;
   }
 
+  public int getVilleDepart() {
+    return villeDepart;
+  }
+
+  public int getVilleArrivee() {
+    return villeArrivee;
+  }
+
   @Override
   public String toString() {
     return "Route{" +
