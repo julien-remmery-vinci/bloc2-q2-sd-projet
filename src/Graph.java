@@ -1,17 +1,22 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
 public class Graph {
   private Map<Integer, Ville> villes;
+  private Map<String, Ville> villesNom;
   private Map<Ville, Set<Route>> routes;
     public Graph(File cities, File roads) {
       routes = new HashMap<>();
       villes = new HashMap<>();
+      villesNom = new HashMap<>();
       Scanner citiesScanner;
       Scanner roadsScanner;
       try {
@@ -29,6 +34,7 @@ public class Graph {
         Ville ville = new Ville(id, nom, lat, lng);
         villes.put(id, ville);
         routes.put(ville, new HashSet<>());
+        villesNom.put(nom, ville);
       }
       while(roadsScanner.hasNextLine()) {
         String[] road = roadsScanner.nextLine().split(",");
@@ -53,10 +59,50 @@ public class Graph {
     }
 
     public void calculerItineraireMinimisantNombreRoutes(String villeDepart, String villeArrivee){
+      Ville depart = villesNom.get(villeDepart);
+      Ville arrivee = villesNom.get(villeArrivee);
+      if (depart == null || arrivee == null) {
+        throw new RuntimeException("Ville non trouvée");
+      }
+      Deque<Ville> aVisiter = new java.util.LinkedList<>();
+      Set<Ville> villeVisitees = new HashSet<>();
+      Map<Ville, Route> routesPrecedentes = new HashMap<>();
+      aVisiter.add(depart);
+      villeVisitees.add(depart);
+      while(!aVisiter.isEmpty()) {
+        Ville ville = aVisiter.poll();
+        if (ville.equals(arrivee)) {
+          break;
+        }
+        Set<Route> routes = this.routes.get(ville);
+        for (Route route : routes) {
+          Ville vArrivee = route.getVilleArrivee();
+          if (!villeVisitees.contains(vArrivee)) {
+            villeVisitees.add(vArrivee);
+            aVisiter.add(vArrivee);
+            routesPrecedentes.put(vArrivee, route);
+          }
+        }
+      }
+      Ville v = arrivee;
+      List<Route> itineraire = new ArrayList<>();
+      while(v != depart) {
+        Route route = routesPrecedentes.get(v);
+        itineraire.add(route);
+        v = route.getVilleDepart();
+      }
 
+      System.out.println("Trajet de "+villeDepart+" à "+villeArrivee+": "+itineraire.size()+" routes et "+itineraire.stream().mapToDouble(Route::getDistance).sum()+" km");
+      for (Route route : itineraire.reversed()) {
+        System.out.println(route.getVilleDepart().getNom()+" -> "+route.getVilleArrivee().getNom() + " ("+Math.round(route.getDistance())+" km)");
+      }
     }
 
     public void calculerItineraireMinimisantKm(String villeDepart, String villeArrivee){
-
+      Ville depart = villesNom.get(villeDepart);
+      Ville arrivee = villesNom.get(villeArrivee);
+      if (depart == null || arrivee == null) {
+        throw new RuntimeException("Ville non trouvée");
+      }
     }
 }
