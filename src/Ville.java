@@ -3,18 +3,18 @@ import java.util.Objects;
 public class Ville {
   private int id;
   private String nom;
-  private double lng;
   private double lat;
+  private double lng;
 
   public Ville(int id) {
     this.id = id;
   }
 
-  public Ville(int id, String nom, double lng, double lat) {
+  public Ville(int id, String nom, double lat, double lng) {
     this.id = id;
     this.nom = nom;
-    this.lng = lng;
     this.lat = lat;
+    this.lng = lng;
   }
 
   @Override
@@ -22,8 +22,8 @@ public class Ville {
     return "Ville{" +
         "id=" + id +
         ", nom='" + nom + '\'' +
-        ", lng=" + lng +
         ", lat=" + lat +
+        ", lng=" + lng +
         '}';
   }
 
@@ -34,12 +34,10 @@ public class Ville {
   public String getNom() {
     return nom;
   }
-
-  public double getLng() {
-    return lng;
-  }
-
   public double getLat() {
     return lat;
+  }
+  public double getLng() {
+    return lng;
   }
 }

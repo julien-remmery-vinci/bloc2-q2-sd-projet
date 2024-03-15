@@ -24,9 +24,9 @@ public class Graph {
         String[] city = citiesScanner.nextLine().split(",");
         int id = Integer.parseInt(city[0]);
         String nom = city[1];
-        double lng = Double.parseDouble(city[2]);
-        double lat = Double.parseDouble(city[3]);
-        Ville ville = new Ville(id, nom, lng, lat);
+        double lat = Double.parseDouble(city[2]);
+        double lng = Double.parseDouble(city[3]);
+        Ville ville = new Ville(id, nom, lat, lng);
         villes.put(id, ville);
         routes.put(ville, new HashSet<>());
       }
@@ -45,11 +45,11 @@ public class Graph {
         s2.add(r2);
         routes.put(villes.get(idVilleArrivee), s2);
       }
-      for (Set<Route> value : routes.values()) {
-        for (Route route : value) {
-          System.out.println(route.getVilleDepart().getId()+","+route.getVilleArrivee().getId());
-        };
-      }
+//      for (Set<Route> value : routes.values()) {
+//        for (Route route : value) {
+//          System.out.println(route.getVilleDepart().getId()+","+route.getVilleArrivee().getId());
+//        };
+//      }
     }
 
     public void calculerItineraireMinimisantNombreRoutes(String villeDepart, String villeArrivee){
