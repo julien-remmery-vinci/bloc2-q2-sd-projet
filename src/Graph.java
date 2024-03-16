@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,5 +105,9 @@ public class Graph {
       if (depart == null || arrivee == null) {
         throw new RuntimeException("Ville non trouvée");
       }
+      double[] distancesDefinitive = new double[villes.size()];
+      Arrays.fill(distancesDefinitive, Double.MAX_VALUE);
+      distancesDefinitive[depart.getId()] = 0;
+
     }
 }
