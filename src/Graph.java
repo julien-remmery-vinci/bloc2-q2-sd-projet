@@ -1,12 +1,15 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -99,15 +102,48 @@ public class Graph {
       }
     }
 
-    public void calculerItineraireMinimisantKm(String villeDepart, String villeArrivee){
-      Ville depart = villesNom.get(villeDepart);
-      Ville arrivee = villesNom.get(villeArrivee);
-      if (depart == null || arrivee == null) {
-        throw new RuntimeException("Ville non trouvée");
-      }
-      double[] distancesDefinitive = new double[villes.size()];
-      Arrays.fill(distancesDefinitive, Double.MAX_VALUE);
-      distancesDefinitive[depart.getId()] = 0;
-
+  public void calculerItineraireMinimisantKm(String villeDepart, String villeArrivee){
+    Ville depart = villesNom.get(villeDepart);
+    Ville arrivee = villesNom.get(villeArrivee);
+    if (depart == null || arrivee == null) {
+      throw new RuntimeException("Ville non trouvée");
     }
+
+    Map<Ville, Double> distancesMinimales = new HashMap<>();
+    Map<Ville, Route> routesPrecedentes = new HashMap<>();
+    PriorityQueue<Ville> file = new PriorityQueue<>(Comparator.comparingDouble(distancesMinimales::get));
+
+    distancesMinimales.put(depart, 0.0);
+    file.add(depart);
+
+    while (!file.isEmpty()) {
+      Ville actuelle = file.poll();
+      double distanceActuelle = distancesMinimales.get(actuelle);
+
+      for (Route route : routes.get(actuelle)) {
+        Ville voisine = route.getVilleArrivee();
+        double distanceViaActuelle = distanceActuelle + route.getDistance();
+
+        if (!distancesMinimales.containsKey(voisine) || distanceViaActuelle < distancesMinimales.get(voisine)) {
+          distancesMinimales.put(voisine, distanceViaActuelle);
+          routesPrecedentes.put(voisine, route);
+          file.add(voisine);
+        }
+      }
+    }
+
+    if (!distancesMinimales.containsKey(arrivee)) {
+      throw new RuntimeException("Aucun chemin trouvé");
+    }
+
+    Deque<Route> cheminLePlusCourt = new ArrayDeque<>();
+    for (Ville v = arrivee; v != depart; v = routesPrecedentes.get(v).getVilleDepart()) {
+      cheminLePlusCourt.addFirst(routesPrecedentes.get(v));
+    }
+
+    System.out.println("Trajet de "+villeDepart+" à "+villeArrivee+": "+cheminLePlusCourt.size()+" routes et "+distancesMinimales.get(arrivee)+" km");
+    for (Route route : cheminLePlusCourt) {
+      System.out.println(route.getVilleDepart().getNom()+" -> "+route.getVilleArrivee().getNom() + " ("+Math.round(route.getDistance())+" km)");
+    }
+  }
 }
