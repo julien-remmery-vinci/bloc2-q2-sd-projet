@@ -71,9 +71,11 @@ public class Graph {
       Map<Ville, Route> routesPrecedentes = new HashMap<>();
       aVisiter.add(depart);
       villeVisitees.add(depart);
+      boolean trouve = false;
       while(!aVisiter.isEmpty()) {
         Ville ville = aVisiter.poll();
         if (ville.equals(arrivee)) {
+          trouve = true;
           break;
         }
         Set<Route> routes = this.routes.get(ville);
@@ -85,6 +87,9 @@ public class Graph {
             routesPrecedentes.put(vArrivee, route);
           }
         }
+      }
+      if (!trouve) {
+        throw new RuntimeException("Aucun chemin trouvé");
       }
       afficherTrajet(villeDepart, villeArrivee, routesPrecedentes);
     }
