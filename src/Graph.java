@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -89,15 +90,16 @@ public class Graph {
         }
       }
       Ville v = arrivee;
-      List<Route> itineraire = new ArrayList<>();
+      Deque<Route> itineraireInverse = new LinkedList<>();
       while(v != depart) {
         Route route = routesPrecedentes.get(v);
-        itineraire.add(route);
+        itineraireInverse.addFirst(route);
         v = route.getVilleDepart();
       }
 
-      System.out.println("Trajet de "+villeDepart+" à "+villeArrivee+": "+itineraire.size()+" routes et "+itineraire.stream().mapToDouble(Route::getDistance).sum()+" km");
-      for (Route route : itineraire.reversed()) {
+      System.out.println("Trajet de "+villeDepart+" à "+villeArrivee+": "+itineraireInverse.size()+" routes et "+itineraireInverse.stream().mapToDouble(Route::getDistance).sum()+" km");
+      while(!itineraireInverse.isEmpty()) {
+        Route route = itineraireInverse.poll();
         System.out.println(route.getVilleDepart().getNom()+" -> "+route.getVilleArrivee().getNom() + " ("+Math.round(route.getDistance())+" km)");
       }
     }
