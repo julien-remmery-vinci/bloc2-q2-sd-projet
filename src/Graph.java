@@ -1,15 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayDeque;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class Graph {
   private Map<Integer, Ville> villes;
@@ -98,13 +89,13 @@ public class Graph {
 
     Map<Ville, Double> distancesMinimales = new HashMap<>();
     Map<Ville, Route> routesPrecedentes = new HashMap<>();
-    PriorityQueue<Ville> file = new PriorityQueue<>(Comparator.comparingDouble(distancesMinimales::get));
+    TreeMap<Double, Ville> treeMap = new TreeMap<>();
 
     distancesMinimales.put(depart, 0.0);
-    file.add(depart);
+    treeMap.put(0.0, depart);
 
-    while (!file.isEmpty()) {
-      Ville actuelle = file.poll();
+    while (!treeMap.isEmpty()) {
+      Ville actuelle = treeMap.pollFirstEntry().getValue();
       double distanceActuelle = distancesMinimales.get(actuelle);
 
       for (Route route : routes.get(actuelle)) {
@@ -114,13 +105,13 @@ public class Graph {
         if (!distancesMinimales.containsKey(voisine) || distanceViaActuelle < distancesMinimales.get(voisine)) {
           distancesMinimales.put(voisine, distanceViaActuelle);
           routesPrecedentes.put(voisine, route);
-          file.add(voisine);
+          treeMap.put(distanceViaActuelle, voisine);
         }
       }
     }
 
     if (!distancesMinimales.containsKey(arrivee)) {
-      throw new RuntimeException("Aucun chemin trouvé");
+      throw new RuntimeException("Impossible d'aller de " + villeDepart + " à " + villeArrivee);
     }
 
     afficherTrajet(villeDepart, villeArrivee, routesPrecedentes);
