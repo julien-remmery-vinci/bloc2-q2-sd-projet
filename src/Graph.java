@@ -1,14 +1,11 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -69,7 +66,7 @@ public class Graph {
       if (depart == null || arrivee == null) {
         throw new RuntimeException("Ville non trouvée");
       }
-      Deque<Ville> aVisiter = new java.util.LinkedList<>();
+      Deque<Ville> aVisiter = new LinkedList<>();
       Set<Ville> villeVisitees = new HashSet<>();
       Map<Ville, Route> routesPrecedentes = new HashMap<>();
       aVisiter.add(depart);
@@ -89,19 +86,7 @@ public class Graph {
           }
         }
       }
-      Ville v = arrivee;
-      Deque<Route> itineraireInverse = new LinkedList<>();
-      while(v != depart) {
-        Route route = routesPrecedentes.get(v);
-        itineraireInverse.addFirst(route);
-        v = route.getVilleDepart();
-      }
-
-      System.out.println("Trajet de "+villeDepart+" à "+villeArrivee+": "+itineraireInverse.size()+" routes et "+itineraireInverse.stream().mapToDouble(Route::getDistance).sum()+" km");
-      while(!itineraireInverse.isEmpty()) {
-        Route route = itineraireInverse.poll();
-        System.out.println(route.getVilleDepart().getNom()+" -> "+route.getVilleArrivee().getNom() + " ("+Math.round(route.getDistance())+" km)");
-      }
+      afficherTrajet(villeDepart, villeArrivee, routesPrecedentes);
     }
 
   public void calculerItineraireMinimisantKm(String villeDepart, String villeArrivee){
@@ -138,14 +123,28 @@ public class Graph {
       throw new RuntimeException("Aucun chemin trouvé");
     }
 
-    Deque<Route> cheminLePlusCourt = new ArrayDeque<>();
-    for (Ville v = arrivee; v != depart; v = routesPrecedentes.get(v).getVilleDepart()) {
-      cheminLePlusCourt.addFirst(routesPrecedentes.get(v));
+    afficherTrajet(villeDepart, villeArrivee, routesPrecedentes);
+  }
+
+  private void afficherTrajet(String villeDepart, String villeArrivee, Map<Ville, Route> routesPrecedentes) {
+    Ville depart = villesNom.get(villeDepart);
+    Ville v = villesNom.get(villeArrivee);
+    Deque<Route> itineraireInverse = new LinkedList<>();
+    int totalRoutes = 0;
+    double distanceTotale = 0;
+    while(v != depart) {
+      Route route = routesPrecedentes.get(v);
+      itineraireInverse.addFirst(route);
+      totalRoutes++;
+      distanceTotale += route.getDistance();
+      v = route.getVilleDepart();
     }
 
-    System.out.println("Trajet de "+villeDepart+" à "+villeArrivee+": "+cheminLePlusCourt.size()+" routes et "+distancesMinimales.get(arrivee)+" km");
-    for (Route route : cheminLePlusCourt) {
+    System.out.println("Trajet de "+ villeDepart +" à "+ villeArrivee +": "+totalRoutes+" routes et "+distanceTotale+" km");
+    while(!itineraireInverse.isEmpty()) {
+      Route route = itineraireInverse.poll();
       System.out.println(route.getVilleDepart().getNom()+" -> "+route.getVilleArrivee().getNom() + " ("+Math.round(route.getDistance())+" km)");
     }
   }
+
 }
