@@ -53,11 +53,6 @@ public class Graph {
         s2.add(r2);
         routes.put(villes.get(idVilleArrivee), s2);
       }
-//      for (Set<Route> value : routes.values()) {
-//        for (Route route : value) {
-//          System.out.println(route.getVilleDepart().getId()+","+route.getVilleArrivee().getId());
-//        };
-//      }
     }
 
     public void calculerItineraireMinimisantNombreRoutes(String villeDepart, String villeArrivee){
